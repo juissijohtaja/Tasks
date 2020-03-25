@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Tasks</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
+    
+    <body>
+      <ul id="menu">
+        <li><a href="/">Etusivu</a></li>
+        <li style="float:right"><a href="{{ url_for('tasks_index') }}">Tasks</a></li>
+        <li style="float:right"><a href="{{ url_for('tasks_form') }}">Add task</a></li>
+      </ul>
+
+      {% if current_user.is_authenticated %}
+      <p>
+      Kirjautunut nimellä {{ current_user.name }}. <a href="{{ url_for('auth_logout') }}">Kirjaudu ulos</a>
+      </p>
+      {% else %}
+      <a href="{{ url_for('auth_login') }}">Kirjaudu</a>
+      {% endif %}
+      
+      {% block body %}
+      <p>
+	Content.
+      </p>
+      {% endblock %}
+    </body>
+  </html>
