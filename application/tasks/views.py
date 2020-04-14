@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 
-from application import app, db
+from application import app, db, login_manager, login_required
 from application.tasks.models import Task
 from application.tasks.forms import TaskForm
 
@@ -22,6 +22,10 @@ def tasks_form():
 def tasks_set_done(task_id):
 
     t = Task.query.get(task_id)
+    if t.account_id != current_user.id:
+        # tee jotain, esim. 
+        return login_manager.unauthorized()
+
     t.done = True
     db.session().commit()
   
@@ -29,7 +33,7 @@ def tasks_set_done(task_id):
 
   
 @app.route("/tasks/", methods=["POST"])
-@login_required
+@login_required(role="ADMIN")
 def tasks_create():
     form = TaskForm(request.form)
   
